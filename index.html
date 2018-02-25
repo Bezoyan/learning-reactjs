@@ -1,0 +1,57 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title> reactJS </title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/vendor/react-15.0.2.js"></script>
+  <script src="js/vendor/react-dom-15.0.2.js"></script>
+  <script src="js/vendor/browser.min-5.8.23.js"></script>
+  <script src="js/vendor/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+ </head>
+ <body>
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-9">
+            <h1>Users<h1>
+            <hr/>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4">
+                  <h3>Name<h3>
+                </div>
+                <div class="col-xs-4 col-sm-4">
+                  <h3>Age<h3>
+                </div>
+              </div>
+            </div>
+        </div>
+        <br/><br/><br/>
+
+   <div id="addUser"></div>
+			<script type="text/babel">
+			var AddUserHTML =
+			<div className="container-fluid">
+				<div className="row">
+					<div className="col-lg-6">
+						<form>
+							<h1>Add User</h1>
+							<hr/>
+							  <div className="form-group">
+								<label for="nameInput">Your name</label>
+								<input type="name" className="form-control" id="nameInput" placeholder="Name"/>
+							  </div>
+							  <div className="form-group">
+								<label for="ageInput">Your age</label>
+								<input type="age" className="form-control" id="ageInput" placeholder="age"/>
+							  </div>
+							  <button type="create" className="btn btn-default col-xs-offset-9 col-xs-3">Create</button>
+
+                <button type="cancel" className="btn btn-default col-xs-offset-9 col-xs-3">Cancel</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			  ReactDOM.render(AddUserHTML, document.getElementById('addUser'));
+			</script>
+     </body>
+</html>
