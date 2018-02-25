@@ -8,24 +8,33 @@
   <script src="js/vendor/browser.min-5.8.23.js"></script>
   <script src="js/vendor/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <script src="js/user/index.js"></script>
  </head>
  <body>
-   <div class="container">
-      <div class="row">
-         <div class="col-sm-9">
-            <h1>Users<h1>
-            <hr/>
-            <div class="row">
-                <div class="col-xs-8 col-sm-4">
-                  <h3>Name<h3>
-                </div>
-                <div class="col-xs-4 col-sm-4">
-                  <h3>Age<h3>
-                </div>
-              </div>
-            </div>
-        </div>
-        <br/><br/><br/>
+   <div>
+    <Users>
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-9">
+               <h1>Users<h1>
+               <hr/>
+               <div class="row">
+                   <div class="col-xs-8 col-sm-4">
+                     <h3>Name<h3>
+                   </div>
+                   <div class="col-xs-4 col-sm-4">
+                     <h3>Age<h3>
+                   </div>
+                 </div>
+               </div>
+           </div>
+      </Users>
+      <br/><br/><br/>
+
+
+
+   </div>
+
 
    <div id="addUser"></div>
 			<script type="text/babel">
@@ -44,9 +53,10 @@
 								<label for="ageInput">Your age</label>
 								<input type="age" className="form-control" id="ageInput" placeholder="age"/>
 							  </div>
-							  <button type="create" className="btn btn-default col-xs-offset-9 col-xs-3">Create</button>
-
-                <button type="cancel" className="btn btn-default col-xs-offset-9 col-xs-3">Cancel</button>
+                <div className="btn-group">
+                  <button type="submit" className="btn btn-primary">Create</button>
+                  <button type="reset" className="btn btn-link">cancel</button>
+                </div>
 							</form>
 						</div>
 					</div>
