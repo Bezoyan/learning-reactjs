@@ -1,5 +1,0 @@
-[
-  {"id":44,"type":"virtual","instance_name":"acme_test_ubuntu01","assigned_address":"10.16.0.2 0","ports":null},
-  {"id":45,"type":"virtual","instance_name":"acme_test_ubuntu02","assigned_address":"10.16.0.3 0,30.30.30.30 0","ports":null},
-  {"id":63,"type":"physical","instance_name":"physical_ubuntu_01","assigned_address":"30.30.0.1 0,30.30.0.2 0,30.30.0.4 0,30.30.0.3 0","ports":"swp2, swp3"}
-]

@@ -2,17 +2,17 @@
 <head>
   <meta charset="utf-8">
   <title> reactJS </title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <script src="js/vendor/react-15.0.2.js"></script>
-  <script src="js/vendor/react-dom-15.0.2.js"></script>
-  <script src="js/vendor/browser.min-5.8.23.js"></script>
-  <script src="js/vendor/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/user/index.js"></script>
+  <a href="addUser.html">Add User</a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
  </head>
  <body>
-   <div>
-    <Users>
+
       <div class="container">
          <div class="row">
             <div class="col-sm-9">
@@ -27,41 +27,11 @@
                    </div>
                  </div>
                </div>
+          </div>
+           <div id="users">
            </div>
-      </Users>
-      <br/><br/><br/>
+        </div>
 
-
-
-   </div>
-
-
-   <div id="addUser"></div>
-			<script type="text/babel">
-			var AddUserHTML =
-			<div className="container-fluid">
-				<div className="row">
-					<div className="col-lg-6">
-						<form>
-							<h1>Add User</h1>
-							<hr/>
-							  <div className="form-group">
-								<label for="nameInput">Your name</label>
-								<input type="name" className="form-control" id="nameInput" placeholder="Name"/>
-							  </div>
-							  <div className="form-group">
-								<label for="ageInput">Your age</label>
-								<input type="age" className="form-control" id="ageInput" placeholder="age"/>
-							  </div>
-                <div className="btn-group">
-                  <button type="submit" className="btn btn-primary">Create</button>
-                  <button type="reset" className="btn btn-link">cancel</button>
-                </div>
-							</form>
-						</div>
-					</div>
-				</div>
-			  ReactDOM.render(AddUserHTML, document.getElementById('addUser'));
-			</script>
+        <script type="text/babel"src="js/user/index.js"></script>
      </body>
 </html>

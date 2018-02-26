@@ -1,12 +1,19 @@
-var Users = React.createClass({
-    render: function () {
+var style = {
+  color: "#ffaaaa",
+  };
+
+var User = React.createClass({
+      render: function () {
         return (
-            <div className="users">
-                <h3>{this.props.children}</h3><hr />
-                <h3>{this.props.choldren}</h3><hr />
-            </div>
-        );
+         <div className="users" >
+           
+           </div>
+
+        )
     }
 });
 
-ReactDOM.render(Users, document.getElementById('users'));
+ReactDOM.render(
+  <User/>,
+  document.getElementById('users')
+    );
