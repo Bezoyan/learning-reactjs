@@ -3,7 +3,11 @@ var AddUsersDataForm = React.createClass({
 
   getInitialState: function () {
     return {
-      data: {}
+      data:[
+      {name: 'Poghos', age: 43},
+      {name: 'Petros', age: 23},
+      {name: 'Manush', age: 19}
+      ]
     };
   },
   updateData: function (newData) {
