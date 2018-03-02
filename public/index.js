@@ -40,7 +40,12 @@ var UserTable = React.createClass({
     <div className="container">
        <div className = "well">
          <h2> Users list </h2>
-
+         <div className="pull-right">
+          <button className="btn btn-success btn-xs">
+           <span className= "glyphicon glyphicon-plus">
+           </span>
+          </button>
+         </div>
         <table className="table table-bordered">
             <thead>
               <tr>
@@ -112,7 +117,7 @@ var AppTable = React.createClass ({
   },
 
       getInitialState: function() {
-        return {data: data};
+        return {data: []};
 
       },
   componentDidMount: function() {
@@ -147,7 +152,7 @@ var AppTable = React.createClass ({
      this.setState({Age: e.target.value});
    },
 
-   handleSubmit: function(e) {
+   handleSubmitEvent: function(e) {
      e.preventDefault();
      var Name = this.state.Name.trim();
      var Age = this.state.Age.trim();
@@ -159,7 +164,7 @@ var AppTable = React.createClass ({
    },
    render: function () {
      return (
-       <form className="addUser" onSubmit={this.handleSubmit}>
+       <form className="addUser" onSubmit={this.handleSubmitEvent}>
           <input
             type = "text"
             placeholder="Your name"
