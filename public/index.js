@@ -3,7 +3,7 @@ var UserRow = React.createClass ({
 
     render: function () {
     var user = this.props.user;
-    var name = user.Name;
+    var name = user.name;
     var id  = user.id;
     var action = user.action
       // <span style={{color: 'blue'}}>
@@ -13,7 +13,8 @@ var UserRow = React.createClass ({
     return (
       <tr>
         <td>{name}</td>
-        <td>{user.Age}</td>
+        <td>{user.age}</td>
+        <td>{user.action}</td>
       </tr>
     );
   }
@@ -41,27 +42,32 @@ var UserTable = React.createClass({
        <div className = "well">
          <h2> Users list </h2>
          <div className="pull-right">
-          <button className="btn btn-success btn-xs">
-           <span className= "glyphicon glyphicon-plus">
+
+
+           <button className="btn btn-success btn-md">
+            <span className= "glyphicon glyphicon-plus">
+             <b>User </b>
            </span>
           </button>
          </div>
         <table className="table table-bordered">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Age</th>
+                <th>name</th>
+                <th>age</th>
                 <th>
-                  <div className="btn-group">
-                    <button type="button" className="btn btn-primary">Action</button>
-                    <button type="button" className="btn btn-primary dropdown-toggle"
-                     data-toggle="dropdown">
-                      <span className="caret"></span>
-                    </button>
-                    <ul className="dropdown-menu">
-                      <li><a href="#">Edit</a></li>
-                      <li><a href="#">Delete</a></li>
-                    </ul>
+                   <div className="pull-right">
+                     <div className="btn-group">
+                      <button type="button" className="btn btn-primary btn-md">Action</button>
+                      <button type="button" className="btn btn-primary btn-lg dropdown-toggle"
+                       data-toggle="dropdown">
+                        <span className="caret"></span>
+                      </button>
+                      <ul className="dropdown-menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </th>
 
@@ -104,7 +110,7 @@ var AppTable = React.createClass ({
       url: this.props.url,
       dataType: 'json',
       type: 'POST',
-      data: comment,
+      data: user,
       success: function(data) {
         this.setState({data: data});
       }.bind(this),
@@ -136,57 +142,77 @@ var AppTable = React.createClass ({
 
 });
 
-//global variable
+//global variables
  var data =[];
+ var style = {color: "#ffaaaa"};
 
 
  //User adding form
  var AddUser = React.createClass ({
    getInitialState: function(){
-     return {Name: '', Age: ''};
+     return {name: '', age: ''};
    },
    handleNameChange: function(e) {
-     this.setState({Name: e.target.value});
+     this.setState({name: e.target.value});
    },
    handleAgeChange: function(e) {
-     this.setState({Age: e.target.value});
+     this.setState({age: e.target.value});
    },
 
+
    handleSubmitEvent: function(e) {
-     e.preventDefault();
-     var Name = this.state.Name.trim();
-     var Age = this.state.Age.trim();
-     if (!Name || ! Age) {
-       return;
-     }
-     this.props.onUserSubmit({Name:Name, Age:Age})
-     this.setState({Name:'', Age: ''});
-   },
+    e.preventDefault();
+    var name = this.state.name.trim();
+    var age = this.state.age.trim();
+    if (!name || !age) {
+      return;
+    }
+    this.props.onUserSubmit({name: name, age: age});
+    this.setState({name: '', age: ''});
+  },
+
    render: function () {
      return (
-       <form className="addUser" onSubmit={this.handleSubmitEvent}>
-          <input
-            type = "text"
-            placeholder="Your name"
-            defaultValue={this.state.Name}
-            onChange={this.handleNameChange}
-          />
-          <input
-            type = "number"
-            placeholder="Your age"
-            defaultValue={this.state.Age}
-            onChange={this.handleAgeChange}
-          />
-          <input type = "submit" value="Create"/>
-          <input type = "cancel" value="Cancel"/>
-       </form>
-     );
+         <form onSubmit={this.handleSubmitEvent}
+         action="action_page" >
+          <div className="container">
+            <h3> Add User </h3>
+            <p>create an account</p>
+            <hr/>
+             <div className="form-group">
+                 <label htmlFor="name">name </label>
+                 <input type="text"
+                 className="form-control"
+                 placeholder="your name" required
+                 value={this.state.name}
+                 onChange={this.handleNameChange}
+                 />
+             </div>
+             <div className="form-group">
+                 <label htmlFor="age">age </label>
+                 <input type="number"
+                 className="form-control"
+                 placeholder="your age" required
+                 value={this.state.age}
+                 onChange={this.handleAgeChange}
+
+                 />
+
+             </div>
+             <div className="clearfix">
+               <button type="button" className="cancelbtn">Cancel</button>
+               <button type="submit" classNaame="signupbtn">Sign Up</button>
+             </div>
+            </div>
+           </form>
+         )
+
    }
 
  });
 
 //ReactDom render
 ReactDOM.render(
-  <AppTable  url="data.json" pollInterval={2000}/>,
+  <AppTable  url="/api/data" pollInterval={2000}/>,
   document.getElementById('user')
 );
