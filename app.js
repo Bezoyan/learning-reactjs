@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require ('path');
 // const  fs = require('fs');
 // const folders = fs.readFileSync('users.json');
-let data = require ('./public/data.json');
+let data = require ('./data/data.json');
 const app = express();
 
 

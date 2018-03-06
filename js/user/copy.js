@@ -10,16 +10,6 @@ var UserRow = React.createClass ({
       //   {user.name}
       // </span>;
 
-    return (
-      <tr>
-        <td>{name}</td>
-        <td>{user.age}</td>
-        <td>{user.action}</td>
-      </tr>
-    );
-  },
-
-
 
 
     return (
