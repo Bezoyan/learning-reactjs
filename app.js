@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require ('path');
 // const  fs = require('fs');
-// const folders = fs.readFileSync('users.json');
+// const folders = fs.readFileSync('./data/data.json');
 let data = require ('./data/data.json');
 const app = express();
 
@@ -19,47 +19,54 @@ app.get('/api/data', function (req, res)  {
 
 
  // POST
-app.post('/api/:id', function(req, res)
+app.post('/api/data', function(req, res)
 {
     let id = req.body.id;
     let name = req.body.name;
     let age = req.body.age;
 
 
+
     res.send(data);
 });
 //
 //
-// //PUT
-// app.put('/users/:id', function (req, res)
-//  {
-//   let id = req.params.id;
-//   console.log(req.body.name);
-//   for (let ix = 0; ix < users.length; ++ix)
-//   {
-//     if(id == users[ix].id)
-//     {
-//       users[ix].name = req.body.name;
-//       res.send(users[ix]);
-//       return;
-//     }
-//   }
+//PUT
+app.post('/api/data/update', function (req, res)
+ {
+  let id = req.params.id;
+  let name = req.params.name;
+  let age = req.params.age;
+
+  for (let i = 0; i < data.length; ++i)
+  {
+    if(id == data[i].id)
+    {
+      data[i].name = req.body.name;
+      res.send(data[i]);
+      return;
+    }
+  }
+
+  res.send(data);
+});
 //
-//   res.send(user);
-// });
 //
-//
-// //DELETE
-// app.delete('/user', function (req, res)
-//  {
-//    users.remove({
-//             id: req.params.id
-//         }, function(err, users) {
-//             if (err)
-//                 res.send(err);
-//             else
-//             res.send('Got a DELETE request at /user')
-// });
+//DELETE
+app.get('/api/data/delete', function (req, res) {
+  ;
+   for (let i=0; i<data.length; ++i)
+   {
+      if(data[i].id == data.id) {
+         data.splice(i , 1);
+
+    }
+    res.send(data);
+   }
+
+}
+);
+
 
 app.listen(3007, function () {
 console.log ('server started on port 3007*')
@@ -90,11 +97,3 @@ console.log ('server started on port 3007*')
 //
 //
 //
-// data.forEach((folder) => {
-//     var obj    = {};
-//     var files  = fs.readdirSync('users.json' + folder);
-//
-//     obj.folder = folder;
-//     obj.files  = files;
-//     objArray.push(obj);
-// });
