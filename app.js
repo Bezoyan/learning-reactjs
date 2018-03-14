@@ -1,8 +1,4 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require ('path');
-// const  fs = require('fs');
-// const folders = fs.readFileSync('./data/data.json');
+const express = require('express'); const bodyParser = require('body-parser'); const path = require ('path'); // const  fs = require('fs'); // const folders = fs.readFileSync('./data/data.json');
 let data = require ('./data/data.json');
 const app = express();
 
@@ -40,7 +36,7 @@ app.post('/api/data/update', function (req, res)
 
   for (let i = 0; i < data.length; ++i)
   {
-    if(id == data[i].id)
+    if(data.id == data[i].id)
     {
       data[i].name = req.body.name;
       res.send(data[i]);

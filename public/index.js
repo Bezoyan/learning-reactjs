@@ -31,17 +31,17 @@ var notifyChange = function(){
    //   this.setState({age: e.target.value});
    // },
 
-
-   handleSubmitEvent: function(e) {
-    e.preventDefault();
-    var name = this.state.name.trim();
-    var age = this.state.age.trim();
-    if (!name || !age) {
-      return;
-    }
-    this.props.onUserSubmit({name: name, age: age});
-    this.setState({name: '', age: ''});
-  },
+  //
+  //  handleSubmitEvent: function(e) {
+  //   e.preventDefault();
+  //   var name = this.state.name.trim();
+  //   var age = this.state.age.trim();
+  //   if (!name || !age) {
+  //     return;
+  //   }
+  //   this.props.onUserSubmit({name: name, age: age});
+  //   this.setState({name: '', age: ''});
+  // },
 
   componentDidMount: function() {
       document.addEventListener('changeUsers',this.handleChange);
@@ -58,31 +58,39 @@ var notifyChange = function(){
      }
    },
 
+     setUserName: function(event){
+       userName: event.target.value;
+       },
+     setUserAge: function(event){
+       userAge: event.target.value;
+     },
 
-      //
-      //   $.post('/api/data', JSON.stringify(data), function()
-      //   {
-      //     $('#AddUser').modal('hide');
-      //     notifyChange();
-      //     return false;
-      //   }).fail(function(data)
-      //   {
-      //     var msg = {};
-      //     try{
-      //        msg =  JSON.parse(data.responseText);
-      //     }catch(e){
-      //       messageDialog("AddUser");
-      //       return false;
-      //     }
-      //     messageDialog("AddUser", msg.message);
-      //   });
-      //
-      // },
+   addUser: function(){
+       if (this.state.userName.length == 0 || this.state.userAge.length == 0 ){
+         messageDialog("AddUserModal", 'Fill up all fields');
+         return false;
+       }
 
-    // componentDidMount: function() {
-    //   document.addEventListener('changeUsers',this.handleSubmitEvent);
-    // },
+       var jsonData = {userName: this.state.userName, userAge: this.state.userAge};
 
+       $.post('/api/data', JSON.stringify(jsonData), function()
+       {
+         $('#AddUserModal').modal('hide');
+         notifyChange();
+         return false;
+       }).fail(function(data)
+       {
+         var msg = {};
+         try{
+            msg =  JSON.parse(data.responseText);
+         }catch(e){
+           messageDialog("AddUserModal");
+           return false;
+         }
+         messageDialog("AddUserModal", msg.message);
+       });
+
+     },
 
    render: function () {
      return (
@@ -105,7 +113,7 @@ var notifyChange = function(){
                    </div>
                    <div  className="form-group multiple-form-group input-group">
                      <span className="input-group-addon span-min-width" id="sizing-addon2">Age</span>
-                     <input placeholder="User age" className="form-control" type="text" onChange={this.setAge} />
+                     <input placeholder="User age" className="form-control" type="number" onChange={this.setAge} />
                    </div>
 
                  </td>
@@ -173,17 +181,18 @@ var EditUserModal = React.createClass({
 
     var self = this;
     var changes={};
-    changes.add=[];
+
     changes.age=this.state.age;
     changes.name=this.state.name;
     changes.id=this.state.id;
 
 
 
-   console.log(changes);
+
 
     $.post('api/data/update', JSON.stringify(changes), function()
     {
+        console.log(changes);
       $('#EditUserModal').modal('hide');
       notifyChange();
       return false;
@@ -259,8 +268,11 @@ var EditUserModal = React.createClass({
 var DeleteUserModal = React.createClass({
 
   deleteUser: function(){
-    //  undefined
-    $.get('api/data/delete',+ this.props.user.id, function(data){
+    var rows = [];
+
+      //  undefined
+
+    $.get('api/data/delete' + this.props.user.id, function(data){
 
         $("#DeleteUserModal").modal('hide');
         notifyChange();
@@ -289,7 +301,7 @@ var DeleteUserModal = React.createClass({
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal">&times;</button>
-              <h4 className="modal-title">Delete User <a >{this.props.user.name}</a></h4>
+              <h4 className="modal-title">Delete User <a >{this.props.user.id}</a></h4>
             </div>
 
             <div className="modal-body">
@@ -444,7 +456,12 @@ var UserRow = React.createClass ({
   showDeleteUserDialog: function(data)
     {
 
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(true, true, data);
+      document.getElementById('delete').dispatchEvent(evt);
       $("#DeleteUserModal").modal('toggle');
+
+
     },
 
     showEditUserDialog: function(data){
@@ -462,11 +479,11 @@ var UserRow = React.createClass ({
         var row_style="";
         var deleteBtn="";
         var editBtn="";
-        // var rows=[];
+        var rows=[];
         var user = this.props.user;
-        var name = this.props.user.name;
-        var age = this.props.user.age;
-        var id  = this.props.user.id;
+        var name = user.name;
+        var age = user.age;
+        var id  = user.id;
 
 
 
@@ -475,8 +492,8 @@ var UserRow = React.createClass ({
 
               <tr className={row_style}>
 
-                  <td>{this.props.user.name}</td>
-                  <td>{this.props.user.age}</td>
+                  <td>{user.name}</td>
+                  <td>{user.age}</td>
 
                    <td className="text-right">
                      <div className="btn-group">
@@ -514,7 +531,7 @@ var UserRow = React.createClass ({
 var UserTable = React.createClass({
     getInitialState: function() {
 
-             return {user:this.props.user};
+             return {users:this.props.users};
 
     },
 
@@ -523,11 +540,11 @@ var UserTable = React.createClass({
           evt.initEvent( true, true, data);
           document.getElementById('add').dispatchEvent(evt);
           $("#AddUser").modal('toggle');
-          console.log (AddUser);
+
         },
 
   render: function() {
-console.log(user);
+
      var rows = [];
 
      this.props.data.map((user) => {
@@ -541,8 +558,8 @@ console.log(user);
       // console.log(user.id);
 
      });
+     // console.log(user.id);
 
-     console.log(user.id);
     return (
 
       <div className="container">
@@ -631,7 +648,8 @@ var AppTable = React.createClass ({
 
   return (
     <div>
-      <UserTable data = {this.state.data} />
+
+      <UserTable data = {this.state.data}  />
       <AddUser data = {this.handelUserSubmit}/>
       <EditUserModal data = {this.state.data} />
       <DeleteUserModal user = {this.state.data} />
