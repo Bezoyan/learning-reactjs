@@ -1,4 +1,8 @@
-const express = require('express'); const bodyParser = require('body-parser'); const path = require ('path'); // const  fs = require('fs'); // const folders = fs.readFileSync('./data/data.json');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require ('path');
+// const  fs = require('fs');
+// const folders = fs.readFileSync('./data/data.json');
 let data = require ('./data/data.json');
 const app = express();
 
@@ -15,53 +19,96 @@ app.get('/api/data', function (req, res)  {
 
 
  // POST
-app.post('/api/data', function(req, res)
+app.post('/api/data/submit', function(req, res)
 {
     let id = req.body.id;
     let name = req.body.name;
     let age = req.body.age;
-
-
+    let new_user = {
+      id: id,
+      name: name,
+      age: age
+    }
+    data.push(new_user)
 
     res.send(data);
+
 });
 //
 //
 //PUT
-app.post('/api/data/update', function (req, res)
- {
+app.post('/api/data/update/:id', function (req, res){
   let id = req.params.id;
-  let name = req.params.name;
-  let age = req.params.age;
-
-  for (let i = 0; i < data.length; ++i)
-  {
-    if(data.id == data[i].id)
-    {
-      data[i].name = req.body.name;
-      res.send(data[i]);
-      return;
-    }
+  let name = req.body.name || null;
+  let age = req.body.age || null;
+  let changes = {};
+  if (name != null) {
+    changes.name = name;
+  }
+  if (age != null) {
+    changes.age = age;
   }
 
-  res.send(data);
-});
-//
-//
-//DELETE
-app.get('/api/data/delete', function (req, res) {
-  ;
-   for (let i=0; i<data.length; ++i)
-   {
-      if(data[i].id == data.id) {
-         data.splice(i , 1);
 
-    }
-    res.send(data);
+   function updateUser(id, changes) {
+     //check id
+   	for (let i = 0; i < data.length; ++i)
+   	{
+   		if (data[i].id == id) {
+   			data[id].name = name;
+   			data[id].age = age;
+
+        return data[id];
+   		}
+
+   	}
+       return null;
    }
 
+   let us = updateUser(req.params.id, changes);
+   res.send(us || 'there are not user in your id');
+
+
+
+  // let id = req.params.id;
+  // let name = req.params.name;
+  // let age = req.params.age;
+  //
+  // for (let i = 0; i < data.length; ++i)
+  // {
+  //   if(data.id == data[i].id)
+  //   {
+  //    console.log(id);
+  //     res.send(data[i]);
+  //     return;
+  //   }
+  // }
+  //
+  // res.send(data);
+
+});
+
+
+//DELETE
+app.get('/api/data/delete/:id', function (req, res) {
+
+  var id = req.params.id;
+
+  function userDelete (id) {
+	for(let i = 0; i < data.length; ++i) {
+        if (data[i].id == id) {
+            data.splice(id,1);
+			return (data);
+        }
+    }
+    return null;
+
 }
-);
+
+let n = userDelete(req.params.id);
+    res.send(n || "no found");
+
+});
 
 
 app.listen(3007, function () {

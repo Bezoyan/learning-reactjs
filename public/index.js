@@ -21,9 +21,16 @@ var notifyChange = function(){
 
  //User adding form
  var AddUser = React.createClass ({
+
    getInitialState: function(){
-     return {name: '', age: ''};
+     return {
+       name: '',
+       age: '',
+       id: ''
+    };
    },
+
+   //
    // handleNameChange: function(e) {
    //   this.setState({name: e.target.value});
    // },
@@ -31,49 +38,60 @@ var notifyChange = function(){
    //   this.setState({age: e.target.value});
    // },
 
-  //
-  //  handleSubmitEvent: function(e) {
-  //   e.preventDefault();
-  //   var name = this.state.name.trim();
-  //   var age = this.state.age.trim();
-  //   if (!name || !age) {
-  //     return;
-  //   }
-  //   this.props.onUserSubmit({name: name, age: age});
-  //   this.setState({name: '', age: ''});
-  // },
 
   componentDidMount: function() {
-      document.addEventListener('changeUsers',this.handleChange);
+      document.addEventListener("showAddUser",this.handleSubmitEvent);
     },
 
-    handleChange: function(e) {
-      var self = this;
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.open("GET", "api/data");
-      xmlhttp.onreadystatechange = function(){
-          if (http.readyState == HttpRequest.DONE)
+     handleSubmitEvent: function(e) {
+      e.preventDefault();
+      var user = this.props.user;
+      // var id = this.state.user.length + 1
+      var name = this.state.name.trim();
+      var age = this.state.age.trim();
+      if (!name || !age) {
+        return;
+      }
+      // this.props.onUserSubmit({name: name, age: age});
+      this.setState({name: name, age: age});
+    },
 
-      http.send();
-     }
-   },
+   //  handleChange: function(e) {
+   //    var self = this;
+   //    var xmlhttp = new XMLHttpRequest();
+   //    xmlhttp.open("GET", "/api/data");
+   //    xmlhttp.onreadystatechange = function(){
+   //        if (http.readyState == HttpRequest.DONE)
+   //
+   //    http.send();
+   //   }
+   // },
 
-     setUserName: function(event){
-       userName: event.target.value;
-       },
-     setUserAge: function(event){
-       userAge: event.target.value;
+
+     setName: function(e){
+       this.setState({name: e.target.value});
+     },
+
+     setAge: function(e){
+       this.setState({age: e.target.value});
      },
 
    addUser: function(){
-       if (this.state.userName.length == 0 || this.state.userAge.length == 0 ){
-         messageDialog("AddUserModal", 'Fill up all fields');
-         return false;
+       // if (this.state.name.length == 0 || this.state.age.length == 0 ){
+       //   messageDialog("AddUserModal", 'Fill up all fields');
+       //   return false;
+       // }
+       var new_user = {
+         id: function () {
+            return '_' + Math.random().toString(36).substr(2, 9);
+          },
+
        }
+       new_user.name = this.state.name;
+       new_user.age = this.state.age;
 
-       var jsonData = {userName: this.state.userName, userAge: this.state.userAge};
-
-       $.post('/api/data', JSON.stringify(jsonData), function()
+        console.log('new user == ', new_user);
+       $.post('/api/data/submit', new_user, function()
        {
          $('#AddUserModal').modal('hide');
          notifyChange();
@@ -87,12 +105,14 @@ var notifyChange = function(){
            messageDialog("AddUserModal");
            return false;
          }
+         UserTable.update(data);
          messageDialog("AddUserModal", msg.message);
        });
 
      },
 
    render: function () {
+
      return (
      <div id="AddUser" className="modal fade" role="dialog" tabIndex="-1">
        <div className="modal-dialog">
@@ -152,47 +172,58 @@ var EditUserModal = React.createClass({
 
              name: "",
              age: "",
-             id: ""
+             editId:''
 
            };
   },
 
   componentDidMount: function() {
-    document.addEventListener('changeUsers', this.handleChange);
+    document.addEventListener("showEditUserDialog", this.handleUserEdit);
   },
 
 
+  handleUserEdit: function(data) {
 
+    var user = this.props.user;
+    var id = data.detail.id;
+    this.state.editId = id;
 
-  setName: function(e){
-    this.setState({name: e.target.value});
-  },
-  setAge: function(e){
-    this.setState({age: e.target.value});
-  },
+  // setName: function(e){
+  //   this.setState({name: e.target.value});
+  // },
+  //
+  // setAge: function(e){
+  //   this.setState({age: e.target.value});
+  // },
+  //
+  //   this.setState({user: data});
+},
 
+setName: function(e){
+  this.setState({name: e.target.value});
+},
+
+setAge: function(e){
+  this.setState({age: e.target.value});
+},
+
+  // this.setState({user: data});
 
   editUser: function(){
-    // if (this.state.name.length == 0 || this.state.age.length == 0){
-    //   messageDialog("EditUserModal", 'Fill up all fields');
-    //   return false;
-    // }
-
 
     var self = this;
     var changes={};
 
-    changes.age=this.state.age;
-    changes.name=this.state.name;
-    changes.id=this.state.id;
+    changes.age = this.state.age;
+    changes.name = this.state.name;
+    changes.id = this.state.editId;
+    console.log(changes);
+    console.log(this.state.editId);
+    var id = this.state.editId;
 
-
-
-
-
-    $.post('api/data/update', JSON.stringify(changes), function()
+    $.post('/api/data/update/' +id, changes, function()
     {
-        console.log(changes);
+
       $('#EditUserModal').modal('hide');
       notifyChange();
       return false;
@@ -266,13 +297,32 @@ var EditUserModal = React.createClass({
 });
 //
 var DeleteUserModal = React.createClass({
+  getInitialState: function() {
+           return {
+              currentId:''
+
+           };
+  },
+
+  componentDidMount: function() {
+    document.addEventListener("showDeleteUserDialog", this.handleUserDelete);
+  },
+
+  handleUserDelete: function(data) {
+
+     var user = this.props.user;
+     var id = data.detail.id;
+     this.state.currentId = id;
+
+      this.setState({user: data});
+    },
+
 
   deleteUser: function(){
-    var rows = [];
+    console.log(this.state.currentId)
+      var id = this.state.currentId
 
-      //  undefined
-
-    $.get('api/data/delete' + this.props.user.id, function(data){
+    $.get('/api/data/delete/' + id, function(data){
 
         $("#DeleteUserModal").modal('hide');
         notifyChange();
@@ -457,8 +507,9 @@ var UserRow = React.createClass ({
     {
 
       var evt = document.createEvent('CustomEvent');
-      evt.initCustomEvent(true, true, data);
-      document.getElementById('delete').dispatchEvent(evt);
+      evt.initCustomEvent("showDeleteUserDialog", true, true, data);
+      // document.dispatchEvent(evt);
+      document.getElementById('delete').dispatchEvent(evt)
       $("#DeleteUserModal").modal('toggle');
 
 
@@ -467,7 +518,7 @@ var UserRow = React.createClass ({
     showEditUserDialog: function(data){
       // console.log(data);
       var evt = document.createEvent('CustomEvent');
-      evt.initCustomEvent( true, true, data);
+      evt.initCustomEvent("showEditUserDialog", true, true, data);
       document.getElementById('edit').dispatchEvent(evt);
       $("#EditUserModal").modal('toggle');
     },
@@ -536,30 +587,40 @@ var UserTable = React.createClass({
     },
 
     showAddUser: function(){
+      console.log(data);
           var evt = document.createEvent('Event');
-          evt.initEvent( true, true, data);
+          evt.initEvent("showAddUser", true, true, data);
           document.getElementById('add').dispatchEvent(evt);
           $("#AddUser").modal('toggle');
 
         },
 
+    updatePage: function(data) {
+      console.log('aaaaaaaaaaaaaaaaaaa');
+      this.setState({
+        rows: data
+      })
+    },
+
   render: function() {
 
-     var rows = [];
+    this.state = {
+      rows: []
+    }
 
      this.props.data.map((user) => {
 
-       rows.push(
-       <UserRow
-          user = {user}
+       this.state.rows.push(
+       <UserRow user = {user}
           key={user.id} />
 
      );
       // console.log(user.id);
 
      });
-     // console.log(user.id);
-
+//      if (this.props.data.length > 0 ){
+//    console.log(this.props);
+// }
     return (
 
       <div className="container">
@@ -583,7 +644,7 @@ var UserTable = React.createClass({
                     </thead>
                    <tbody>
 
-                   {rows}
+                   {this.state.rows}
                    </tbody>
 
                   </table>
@@ -663,26 +724,6 @@ var AppTable = React.createClass ({
 
 
 
- // var LoadEditUserDialog = function (){
- //    $.get( url="/api/data", function(data) {
- //      var a=0;
- //      data=[];
- //      ReactDOM.render(
- //
- //        <EditUserModal user={data} userId={a}/>,
- //        document.getElementById('edit')
- //      );
- //    });
- //  }
-
-  // var LoadDeleteUserModalDialog = function (){
-  //   $.get("", function() {
-  //     ReactDOM.render(
-  //       <DeleteUserModal user={data}/>,
-  //       document.getElementById('delete')
-  //     );
-  //   });
-  // }
 
 //ReactDom render
 ReactDOM.render(
